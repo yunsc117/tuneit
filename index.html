@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>TuneIt — Instrument Tuner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600;1,700&family=Outfit:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 /* ── Dark theme (default) ─────────────────── */
 :root {
@@ -53,7 +53,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Outfit', sans-serif;
   background-color: var(--bg);
   background-image:
     radial-gradient(ellipse 80% 55% at 50% -5%, rgba(0,229,160,0.07) 0%, transparent 60%),
@@ -176,7 +176,7 @@ header {
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
-  font-family: 'Syne', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -224,7 +224,7 @@ header {
   border: none;
   background: transparent;
   color: var(--muted);
-  font-family: 'Syne', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.5px;
@@ -303,24 +303,28 @@ header {
 }
 
 .note-letter {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 92px;
-  letter-spacing: -1px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 700;
+  font-size: 96px;
+  letter-spacing: -2px;
   line-height: 1;
   transition: color 0.22s ease, text-shadow 0.22s ease;
   color: var(--text);
 }
 .note-acc {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 42px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 44px;
   line-height: 1;
-  margin-left: -3px;
-  margin-bottom: 12px;
+  margin-left: -2px;
+  margin-bottom: 10px;
   transition: color 0.22s ease;
   color: var(--text);
 }
 .note-oct {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 30px;
   font-weight: 400;
   color: var(--muted);
@@ -330,15 +334,15 @@ header {
 
 /* ── Readouts ─────────────────────────────── */
 .freq-readout {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 19px;
-  font-weight: 300;
+  font-family: 'Space Mono', monospace;
+  font-size: 18px;
+  font-weight: 400;
   color: var(--muted);
   letter-spacing: 1px;
   margin-bottom: 4px;
 }
 .cents-readout {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Space Mono', monospace;
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 2px;
@@ -349,7 +353,7 @@ header {
 }
 
 .intune-label {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -384,7 +388,7 @@ header {
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--muted);
-  font-family: 'Syne', sans-serif;
+  font-family: 'Outfit', sans-serif;
   cursor: pointer;
   transition: border-color 0.16s ease, background-color 0.16s ease, color 0.16s ease, box-shadow 0.16s ease;
   display: flex;
@@ -395,7 +399,7 @@ header {
   line-height: 1;
 }
 .str-btn .sn { font-size: 14px; font-weight: 700; }
-.str-btn .so { font-size: 10px; font-weight: 400; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+.str-btn .so { font-size: 10px; font-weight: 400; color: var(--muted); font-family: 'Space Mono', monospace; }
 
 .str-btn:hover { border-color: var(--in-tune); color: var(--text); }
 
@@ -437,7 +441,7 @@ header {
   border: 1px solid transparent;
   background: var(--in-tune);
   color: #000;
-  font-family: 'Syne', sans-serif;
+  font-family: 'Outfit', sans-serif;
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 1.8px;
@@ -584,9 +588,9 @@ footer {
       <g id="ticks"></g>
 
       <!-- ♭ / # labels -->
-      <text x="8"   y="184" font-family="Syne,sans-serif" font-size="14" font-weight="700"
+      <text x="8"   y="184" font-family="Outfit,sans-serif" font-size="14" font-weight="700"
             text-anchor="middle" style="fill: var(--meter-label)">♭</text>
-      <text x="312" y="184" font-family="Syne,sans-serif" font-size="14" font-weight="700"
+      <text x="312" y="184" font-family="Outfit,sans-serif" font-size="14" font-weight="700"
             text-anchor="middle" style="fill: var(--meter-label)">#</text>
 
       <!-- Center top marker -->
