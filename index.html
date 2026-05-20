@@ -826,6 +826,16 @@ let autoMidi     = null;
 let smoothCents = 0, goalCents = 0, needleCol = null;
 let lastAnalysis = 0;
 
+// Pitch stabilization
+const FREQ_BUF_SIZE    = 5;   // median filter window
+const LOCK_CONFIRM     = 3;   // consecutive same-note frames to lock on
+const HOLD_FRAMES      = 6;   // silence frames before display clears (~540ms)
+let freqBuf       = [];
+let confirmedMidi = null;
+let pendingMidi   = null;
+let pendingCount  = 0;
+let holdCount     = 0;
+
 // ── Note helpers ───────────────────────────────────────────────
 const midiToFreq = m => A4 * Math.pow(2, (m - MIDI_A4) / 12);
 const freqToMidi = f => 12 * Math.log2(f / A4) + MIDI_A4;
@@ -843,6 +853,52 @@ function centsColor(c) {
   if (a < 8)  return '#00e5a0';
   if (a < 20) return '#ffc840';
   return '#ff3355';
+}
+
+// ── Pitch stabilization ───────────────────────────────────────
+function resetPitchState() {
+  freqBuf = []; confirmedMidi = null;
+  pendingMidi = null; pendingCount = 0; holdCount = 0;
+}
+
+function processDetection(rawFreq) {
+  // ① Median filter — reject outlier frames
+  if (rawFreq !== null) {
+    freqBuf.push(rawFreq);
+    if (freqBuf.length > FREQ_BUF_SIZE) freqBuf.shift();
+  } else {
+    freqBuf = [];
+  }
+  let freq = null;
+  if (rawFreq !== null && freqBuf.length >= 3) {
+    const s = [...freqBuf].sort((a, b) => a - b);
+    freq = s[Math.floor(s.length / 2)];
+  } else if (rawFreq !== null) {
+    freq = rawFreq;
+  }
+
+  // ② Hold time — keep display while string decays naturally
+  if (freq === null) {
+    holdCount++;
+    if (holdCount > HOLD_FRAMES) {
+      resetPitchState();
+      updateDisplay(null, null);
+    }
+    return;
+  }
+  holdCount = 0;
+
+  // ③ Lock-on state machine — confirm note before displaying
+  const midiRnd = Math.round(freqToMidi(freq));
+  if (midiRnd === pendingMidi) {
+    pendingCount = Math.min(pendingCount + 1, LOCK_CONFIRM);
+  } else {
+    pendingMidi = midiRnd;
+    pendingCount = 1;
+  }
+  if (pendingCount >= LOCK_CONFIRM) confirmedMidi = pendingMidi;
+
+  if (confirmedMidi !== null) updateDisplay(freq, confirmedMidi);
 }
 
 // ── Auto string detection ──────────────────────────────────────
@@ -945,7 +1001,7 @@ function updateNeedle(cents, color) {
 }
 
 // ── Display update ─────────────────────────────────────────────
-function updateDisplay(freq) {
+function updateDisplay(freq, refMidi = null) {
   const elLetter = document.getElementById('noteLetter');
   const elAcc    = document.getElementById('noteAcc');
   const elOct    = document.getElementById('noteOct');
@@ -972,7 +1028,7 @@ function updateDisplay(freq) {
   }
 
   const midiRaw = freqToMidi(freq);
-  const midiRnd = Math.round(midiRaw);
+  const midiRnd = refMidi !== null ? refMidi : Math.round(midiRaw);
   const idx     = ((midiRnd % 12) + 12) % 12;
   const octave  = Math.floor(midiRnd / 12) - 1;
 
@@ -1023,7 +1079,7 @@ function loop(ts) {
     lastAnalysis = ts;
     const buf = new Float32Array(analyser.fftSize);
     analyser.getFloatTimeDomainData(buf);
-    updateDisplay(autoCorrelate(buf, audioCtx.sampleRate));
+    processDetection(autoCorrelate(buf, audioCtx.sampleRate));
   }
 
   rafId = requestAnimationFrame(loop);
@@ -1065,7 +1121,8 @@ function stopAudio() {
   document.getElementById('startBtn').classList.remove('live');
   document.getElementById('btnLabel').textContent = 'Start Tuning';
   document.getElementById('btnDot').classList.remove('pulse');
-  updateDisplay(null);
+  resetPitchState();
+  updateDisplay(null, null);
   smoothCents = 0; goalCents = 0;
   updateNeedle(0, null);
 }
@@ -1102,6 +1159,7 @@ function renderInstPicker() {
     btn.onclick = () => {
       currentInst = key; targetMidi = null;
       updateAutoDetect(null);
+      resetPitchState();
       document.getElementById('instPicker').classList.remove('open');
       renderInstPicker(); renderStrings();
     };
@@ -1125,6 +1183,7 @@ function renderStrings() {
     btn.onclick = () => {
       targetMidi = (targetMidi === midi) ? null : midi;
       updateAutoDetect(null);
+      resetPitchState();
       renderStrings();
     };
     el.appendChild(btn);
