@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -37,24 +37,24 @@
   --needle-def:  #ffffff;
 }
 
-/* ── Light theme ──────────────────────────── */
+/* ── Light theme — white + vivid purple ───── */
 [data-theme="light"] {
-  --bg:          #f6f4ef;
-  --card:        #fefcf8;
-  --surface:     #edeae2;
-  --border:      #d8d5cb;
-  --dim:         #b8b4a8;
-  --text:        #1c1a14;
-  --muted:       #888890;
-  --dot-color:   #d4d0c8;
-  --arc-track:   #e5e1d8;
-  --tick-major:  #b0ac9e;
-  --tick-minor:  #ccc8bc;
-  --center-mark: #b8b4a8;
-  --meter-label: #a09c92;
-  --pivot-bg:    #f6f4ef;
-  --pivot-ring:  #c8c4bc;
-  --needle-def:  #1c1a14;
+  --bg:          #f7f5ff;
+  --card:        #ffffff;
+  --surface:     #f0eeff;
+  --border:      #ddd8ff;
+  --dim:         #a090d8;
+  --text:        #1a1040;
+  --muted:       #6858b8;
+  --dot-color:   #e4e0ff;
+  --arc-track:   #ece8ff;
+  --tick-major:  #b0a4e8;
+  --tick-minor:  #d0caf8;
+  --center-mark: #c0b8f0;
+  --meter-label: #9080d0;
+  --pivot-bg:    #f7f5ff;
+  --pivot-ring:  #c8c0f0;
+  --needle-def:  #1a1040;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -261,8 +261,14 @@ header {
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+[data-theme="light"] body {
+  background-image:
+    radial-gradient(ellipse 80% 55% at 50% -5%, rgba(100,60,220,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 5% 100%, rgba(80,40,200,0.05) 0%, transparent 55%);
+}
+
 [data-theme="light"] .card {
-  box-shadow: 0 2px 28px rgba(0,0,40,0.10), inset 0 1px 0 rgba(255,255,255,0.9);
+  box-shadow: 0 4px 32px rgba(80,40,200,0.12), 0 0 0 1px rgba(100,60,220,0.08), inset 0 1px 0 rgba(255,255,255,0.9);
 }
 
 .card::before {
@@ -729,27 +735,67 @@ footer {
 <footer>
   Uses your microphone &nbsp;·&nbsp; Pitch detection via autocorrelation
   <br>
+  <button class="footer-link" onclick="openAbout()">About</button>
+  &nbsp;·&nbsp;
   <button class="footer-link" onclick="openPrivacy()">Privacy Policy</button>
 </footer>
+
+<!-- About Modal -->
+<div class="modal-overlay" id="aboutModal" onclick="closeAboutIfOutside(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeAbout()" aria-label="Close">×</button>
+    <h2>About TuneIt</h2>
+    <p>TuneIt is a free, browser-based instrument tuner designed for musicians of all levels. No downloads, no sign-up — just open the page and start tuning.</p>
+
+    <h3>How It Works</h3>
+    <p>TuneIt uses your device's microphone and the Web Audio API to capture sound in real time. A mathematical technique called autocorrelation analyzes each audio frame to identify the fundamental frequency of the note you're playing, then displays it on a semicircular needle meter with cent-level accuracy.</p>
+
+    <h3>Supported Instruments</h3>
+    <p><strong>Chromatic</strong> — any instrument, any key. Auto-detects the nearest semitone.<br>
+    <strong>Guitar</strong> — E2 A2 D3 G3 B3 E4 (standard tuning)<br>
+    <strong>Bass</strong> — E1 A1 D2 G2<br>
+    <strong>Ukulele</strong> — G4 C4 E4 A4<br>
+    <strong>Violin</strong> — G3 D4 A4 E5</p>
+
+    <h3>Features</h3>
+    <p>Auto string detection highlights the string you're playing in real time. You can also manually lock any string as a reference. Theme preference (light/dark) is saved locally in your browser.</p>
+
+    <h3>Privacy</h3>
+    <p>All audio processing happens entirely in your browser. Your microphone input is never transmitted to any server. See our <button onclick="closeAbout();openPrivacy();" style="background:none;border:none;color:var(--in-tune);cursor:pointer;font:inherit;padding:0;text-decoration:underline;text-underline-offset:3px">Privacy Policy</button> for full details.</p>
+
+    <h3>Contact</h3>
+    <p>Questions or feedback? Reach us at <a href="mailto:yunsc117@gmail.com">yunsc117@gmail.com</a></p>
+  </div>
+</div>
 
 <!-- Privacy Policy Modal -->
 <div class="modal-overlay" id="privacyModal" onclick="closePrivacyIfOutside(event)">
   <div class="modal-box">
     <button class="modal-close" onclick="closePrivacy()" aria-label="Close">×</button>
     <h2>Privacy Policy</h2>
-    <p>Last updated: 2025. This policy explains how TuneIt handles your data.</p>
+    <p>Last updated: May 2025. This policy explains how TuneIt collects, uses, and protects information when you use this website.</p>
 
-    <h3>Microphone</h3>
-    <p>TuneIt accesses your microphone solely to detect pitch. All audio processing happens locally in your browser — no audio data is ever transmitted or stored on any server.</p>
+    <h3>Microphone Access</h3>
+    <p>TuneIt requests access to your microphone solely to detect pitch. All audio processing is performed locally in your browser using the Web Audio API — no audio data is ever recorded, transmitted, or stored on any server.</p>
 
     <h3>Cookies &amp; Local Storage</h3>
-    <p>TuneIt stores only your theme preference (light/dark) in your browser's localStorage. No tracking cookies are set by this application.</p>
+    <p>TuneIt stores only your theme preference (light/dark) in your browser's localStorage. This data never leaves your device. No tracking cookies or session cookies are set by this application.</p>
 
-    <h3>Third-Party Advertising</h3>
-    <p>This site uses Google AdSense to display advertisements. Google may use cookies to serve ads based on your prior visits to this or other websites. You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a>.</p>
+    <h3>Third-Party Advertising (Google AdSense)</h3>
+    <p>This site uses Google AdSense to display advertisements. Google and its partners may use cookies to serve ads based on your prior visits to this or other websites. Google's use of advertising cookies enables it and its partners to serve ads to you based on your visit to our site and/or other sites on the Internet.</p>
+    <p>You may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a> or <a href="https://www.aboutads.info" target="_blank" rel="noopener">www.aboutads.info</a>.</p>
+
+    <h3>Children's Privacy</h3>
+    <p>TuneIt is not directed at children under the age of 13. We do not knowingly collect personal information from children.</p>
 
     <h3>Analytics</h3>
-    <p>This site does not currently use any analytics or user-tracking services.</p>
+    <p>This site does not currently use any analytics or user-tracking services beyond what Google AdSense may collect as described above.</p>
+
+    <h3>Data Retention</h3>
+    <p>TuneIt does not collect or retain any personal data. The only data stored is your local theme preference, which you can clear at any time by clearing your browser's localStorage.</p>
+
+    <h3>Changes to This Policy</h3>
+    <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated date.</p>
 
     <h3>Contact</h3>
     <p>For any privacy-related questions, please contact: <a href="mailto:yunsc117@gmail.com">yunsc117@gmail.com</a></p>
@@ -1085,13 +1131,17 @@ function renderStrings() {
   }
 }
 
-// ── Privacy modal ─────────────────────────────────────────────
+// ── Modals ─────────────────────────────────────────────────────
 function openPrivacy()  { document.getElementById('privacyModal').classList.add('open'); }
 function closePrivacy() { document.getElementById('privacyModal').classList.remove('open'); }
 function closePrivacyIfOutside(e) { if (e.target === e.currentTarget) closePrivacy(); }
 
+function openAbout()  { document.getElementById('aboutModal').classList.add('open'); }
+function closeAbout() { document.getElementById('aboutModal').classList.remove('open'); }
+function closeAboutIfOutside(e) { if (e.target === e.currentTarget) closeAbout(); }
+
 // ── Boot ───────────────────────────────────────────────────────
-applyTheme(localStorage.getItem('tuneit-theme') || 'dark');
+applyTheme(localStorage.getItem('tuneit-theme') || 'light');
 renderInstPicker();
 renderStrings();
 initMeter();
