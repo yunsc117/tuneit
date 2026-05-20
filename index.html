@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>TuneIt — Instrument Tuner</title>
+<title>TuneIt — Free Online Instrument Tuner</title>
+<meta name="description" content="Free online instrument tuner — tune guitar, bass, ukulele, violin and more with your microphone. Accurate pitch detection via autocorrelation.">
+<meta name="keywords" content="instrument tuner, guitar tuner, bass tuner, ukulele tuner, violin tuner, online tuner, chromatic tuner, free tuner">
+<meta property="og:title" content="TuneIt — Free Online Instrument Tuner">
+<meta property="og:description" content="Free online instrument tuner for guitar, bass, ukulele, violin, and more.">
+<meta property="og:type" content="website">
+<meta name="robots" content="index, follow">
+<meta name="google-adsense-account" content="ca-pub-XXXXXXXXXXXXXXXX">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,600;1,700&family=Outfit:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
@@ -103,7 +110,7 @@ header {
   justify-content: space-between;
   margin-bottom: 22px;
   position: relative;
-  z-index: 2;
+  z-index: 20;
   gap: 10px;
 }
 
@@ -500,6 +507,94 @@ footer {
   text-align: center;
 }
 
+/* ── Footer link ──────────────────────────── */
+.footer-link {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  padding: 0;
+  opacity: 0.7;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.15s ease;
+}
+.footer-link:hover { opacity: 1; }
+
+/* ── Privacy Policy modal ─────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
+
+.modal-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 28px 24px;
+  max-width: 480px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  transform: translateY(10px);
+  transition: transform 0.22s ease;
+}
+.modal-overlay.open .modal-box { transform: translateY(0); }
+
+.modal-box h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+.modal-box h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--in-tune);
+  margin: 14px 0 4px;
+}
+.modal-box p {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+.modal-box a { color: var(--in-tune); }
+.modal-close {
+  position: absolute;
+  top: 16px; right: 18px;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.15s ease;
+}
+.modal-close:hover { color: var(--text); }
+
 /* ── Responsive ───────────────────────────── */
 @media (max-width: 480px) {
   body { padding: 18px 12px 36px; }
@@ -631,7 +726,35 @@ footer {
   </button>
 </div>
 
-<footer>Uses your microphone &nbsp;·&nbsp; Pitch detection via autocorrelation</footer>
+<footer>
+  Uses your microphone &nbsp;·&nbsp; Pitch detection via autocorrelation
+  <br>
+  <button class="footer-link" onclick="openPrivacy()">Privacy Policy</button>
+</footer>
+
+<!-- Privacy Policy Modal -->
+<div class="modal-overlay" id="privacyModal" onclick="closePrivacyIfOutside(event)">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closePrivacy()" aria-label="Close">×</button>
+    <h2>Privacy Policy</h2>
+    <p>Last updated: 2025. This policy explains how TuneIt handles your data.</p>
+
+    <h3>Microphone</h3>
+    <p>TuneIt accesses your microphone solely to detect pitch. All audio processing happens locally in your browser — no audio data is ever transmitted or stored on any server.</p>
+
+    <h3>Cookies &amp; Local Storage</h3>
+    <p>TuneIt stores only your theme preference (light/dark) in your browser's localStorage. No tracking cookies are set by this application.</p>
+
+    <h3>Third-Party Advertising</h3>
+    <p>This site uses Google AdSense to display advertisements. Google may use cookies to serve ads based on your prior visits to this or other websites. You can opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener">Google Ads Settings</a>.</p>
+
+    <h3>Analytics</h3>
+    <p>This site does not currently use any analytics or user-tracking services.</p>
+
+    <h3>Contact</h3>
+    <p>For any privacy-related questions, please contact: <a href="mailto:yunsc117@gmail.com">yunsc117@gmail.com</a></p>
+  </div>
+</div>
 
 <script>
 // ── Constants ─────────────────────────────────────────────────
@@ -961,6 +1084,11 @@ function renderStrings() {
     el.appendChild(btn);
   }
 }
+
+// ── Privacy modal ─────────────────────────────────────────────
+function openPrivacy()  { document.getElementById('privacyModal').classList.add('open'); }
+function closePrivacy() { document.getElementById('privacyModal').classList.remove('open'); }
+function closePrivacyIfOutside(e) { if (e.target === e.currentTarget) closePrivacy(); }
 
 // ── Boot ───────────────────────────────────────────────────────
 applyTheme(localStorage.getItem('tuneit-theme') || 'dark');
